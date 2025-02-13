@@ -25,6 +25,7 @@ for i = 1:length(inp_theta2)
     % plot fixed pivots
     figure(1)
     plot(0,0,'o')
+    plot(Dx,)
     hold on
 
 
@@ -43,7 +44,7 @@ for i = 1:length(inp_theta2)
 
     Dy = r8; % constraint
     Dx = r7;
-    plot(Dx,Dy,'o')
+    
     % crank (A -> B)
     link_AB = plot([Ax, Bx], [Ay, By], 'ro-', 'LineWidth', 2);
     

@@ -7,6 +7,7 @@ function A = get_A_matrix(%m_i, ... % these are the examples of the possible inp
         % I_Gi);
 
 % ENTER YOUR CODE HERE %
+% 
 
 A = [ ...
     % 0 0 0 ENTER YOUR MATRIX HERE ; ...
