@@ -4,7 +4,8 @@ clear; clc; close all;
 
 %%initial parameter: unit: m, degree, rad/sec
 r2 = 36; % cm  o2B
-% and so on ...
+r3 = 60;
+r6 = 120;
 
 
 theta2 = 0:1:360; % from 0 to 360 with step 1: [0,1,2,3,4....360]
@@ -65,13 +66,14 @@ ylabel('\theta_i   unit: degree')
 dtheta_2 = 2; % theta2 dot
 ddtheta_2 = 0; % theta2 doble-dot - second derivative
 
-rho = % ENTER YOUR CODE HERE %; % density, gr/cm3
-d = % ENTER YOUR CODE HERE %; % diameter, cm
+% Rod masses (calculated by hand)
+m2 = 76.34;
+m3 = 254.47;
+m6 = 127.23;
 
-m_i = % ENTER YOUR CODE HERE % ; % link 2, o2a2 kg
-I_Gi = % ENTER YOUR CODE HERE %;
-% and so on
-
+% Mass moments of intertia (calculated by hand)
+Ig3 = 305379.90;
+Ig6 = 152683.95;
 
 M12_list = [];
 theta2_list = [];
@@ -91,25 +93,20 @@ for theta2 = 0:1:360
 
 % and so on    
 
-    B = get_ma_vector(%m_i, ... % these are the examples of the possible input
-        % ri ... % Only include the inputs that are necessary
-        % theta_i ...
-        % dtheta_i ...
-        % ddtheta_i ...
-        % ddr_i, ...
-        % I_Gi);
-    
-    A = get_A_matrix(%m_i, ... % these are the examples of the possible input
-        % ri ... % Only include the inputs that are necessary
-        % theta_i ...
-        % dtheta_i ...
-        % ddtheta_i ...
-        % ddr_i, ...
-        % I_Gi);
+    B = get_ma_vector();
+    A = get_A_matrix();
 
     x = A\ B; % Ax = B, solution for x; note that in MATLAB: A\B = B/A
     
-    % M12:
+    % Parse results
+   F12x = x();
+   F12y = x();
+   F23x = x();
+   F23y = x();
+   F34x = x();
+   F34y = x();
+
+
     M12 = x(% ENTER YOUR CODE HERE%);
     M12_list = [M12_list; M12];
     
