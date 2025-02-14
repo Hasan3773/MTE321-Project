@@ -1,19 +1,12 @@
 %% Animate the motion of the mechanism 
 %%initial parameter: unit: cm, degree, rad/sec
 r2 = 36; % cm  AB
-r3 = 0; % variable
-r4 = 120;
-r5 = 0; % variables
+r3 = 120; % variable
 r6 = 60;
-r7 = 0; % defined later
 r8 = 8.4; 
 
 close all
 inp_theta2 = 0:1:720; % two rotations from 0 to 360 with step 1: [0,1,2,3,4....360]
-
-figure; hold on; axis equal;
-xlabel('X (cm)'); ylabel('Y (cm)');
-grid on;
 
 for i = 1:length(inp_theta2)
 
@@ -27,35 +20,42 @@ for i = 1:length(inp_theta2)
     plot(0,0,'o')
     hold on
 
-
     theta_2 = inp_theta2(i); 
     Ax = 0; Ay = 0; % fixed pivot
     Bx = r2 * cosd(theta_2);
     By = r2 * sind(theta_2);
-    
+
     theta_3 = asin((r2*sin(theta_2) - r8) ./ r3);
     theta_3 = theta_3 + 180; 
-
+    theta_5 = theta_3;
     r7 = (r2 * cosd(theta_2)) - (r3 * cosd(theta_3)); 
-    r3 = r2 - r7 - r8;
-    % solve for slider c position
-    % Cx = r6; Cy = 0;
+    theta_6 = pi - asin((r2*sind(theta_2 + theta_5) / r6)) - theta_5;
+    theta_6 = theta_6 + 180;
+    r5 = ((-r2 * sind(theta_2 + theta_6)) / sind(theta_5 + theta_6));
 
     Dy = r8; % constraint
     Dx = r7;
     plot(Dx,Dy,'o')
+
+    % Cx = r6*cosd(theta_6);
+    % Cy = r6*sind(theta_6);
+
+    Cx = r5 * cosd(theta_3);
+    Cy = r5 * sind(theta_3);
+
     % crank (A -> B)
     link_AB = plot([Ax, Bx], [Ay, By], 'ro-', 'LineWidth', 2);
     
     % Coupler (B -> D)
     link_BD = plot([Bx, Dx], [By, Dy], 'bo-', 'LineWidth', 2);
     
-    % Ground link (A -> D)
-    %link_AC = plot([Ax, Dx], [Ay, Dy], 'ko-', 'LineWidth', 2);
-  
+    % Ground link (A -> C)
+    link_AC = plot([Ax, Cx], [Ay, Cy], 'ko-', 'LineWidth', 2);
+
+    % Ground link (B -> C)
+    % link_BC = plot([Ax, Cx], [Ay, Cy], 'ko-', 'LineWidth', 2);
     
-    axis([-50 75 -50 75])
-    % Interval to update plot 
+    axis([-50 250 -50 250])
     pause(0.001);
     hold off;
     grid on;
