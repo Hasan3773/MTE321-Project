@@ -30,7 +30,6 @@ for i = 1:length(inp_theta2)
     theta_5 = theta_3;
     r7 = (r2 * cosd(theta_2)) - (r3 * cosd(theta_3)); 
     theta_6 = 180 - asind((r2*sind(theta_2 + theta_5) / r6)) - theta_5;
-    
     r5 = ((-r2 * sind(theta_2 + theta_6)) / sind(theta_5 + theta_6));
 
     Dy = r8; % constraint
