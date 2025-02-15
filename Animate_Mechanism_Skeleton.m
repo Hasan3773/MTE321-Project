@@ -25,23 +25,20 @@ for i = 1:length(inp_theta2)
     Bx = r2 * cosd(theta_2);
     By = r2 * sind(theta_2);
 
-    theta_3 = asin((r2*sin(theta_2) - r8) ./ r3);
+    theta_3 = asind((r2*sind(theta_2) - r8) ./ r3);
     theta_3 = theta_3 + 180; 
     theta_5 = theta_3;
     r7 = (r2 * cosd(theta_2)) - (r3 * cosd(theta_3)); 
-    theta_6 = pi - asin((r2*sind(theta_2 + theta_5) / r6)) - theta_5;
-    theta_6 = theta_6 + 180;
+    theta_6 = 180 - asind((r2*sind(theta_2 + theta_5) / r6)) - theta_5;
+    
     r5 = ((-r2 * sind(theta_2 + theta_6)) / sind(theta_5 + theta_6));
 
     Dy = r8; % constraint
     Dx = r7;
     plot(Dx,Dy,'o')
 
-    % Cx = r6*cosd(theta_6);
-    % Cy = r6*sind(theta_6);
-
-    Cx = r5 * cosd(theta_3);
-    Cy = r5 * sind(theta_3);
+    Cx = r6 * cosd(theta_6);
+    Cy = r6 * sind(theta_6);
 
     % crank (A -> B)
     link_AB = plot([Ax, Bx], [Ay, By], 'ro-', 'LineWidth', 2);
