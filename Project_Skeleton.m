@@ -6,68 +6,20 @@ clear; clc; close all;
 r2 = 36; % cm  o2B
 r3 = 60;
 r6 = 120;
+r8 = 8.4; 
 
-
-theta2 = 0:1:360; % from 0 to 360 with step 1: [0,1,2,3,4....360]
+theta1 = 180;
 dtheta2 = 1;
 ddtheta2 = 0; 
 
-% TIPS:  
-
-% cosd(x) - is a cosine of x, where x in degrees
-% cos(x) - is a cosine of x, where x in radians
-% using '.*' enables element-wise multiplication
-% accordingly, '.^' element-wise exponent
-% [a1 a2 a3].^[b1 b2 b3] = [a1*b1 a2*b2 a3*b3]
-% '*' is matrix multiplication
 
 %% Part 1- Calculations for kinematic variables, caculated based on loop closure eqn
-
-r_i = % ENTER YOUR CODE HERE %
-theta_i = % ENTER YOUR CODE HERE %
-% Hint: Check if the angle needs to be adjusted to its true value
-% Hint: Check this for all other angles too
-
-
-
-%% Take time derivative of loop eqn (d/dt) 
-% and solve them for dtheta3, dtheta5 & dr6
-% and the same for the second derivatives. 
-
-dr_i = % ENTER YOUR CODE HERE %
-dtheta_i = % ENTER YOUR CODE HERE %
-
-ddr_i = % ENTER YOUR CODE HERE %
-ddtheta_i = % ENTER YOUR CODE HERE %
-
-% and so on
-
-
-%% Plot vars;
-
-% Plot all desired deliverables. 
-
-figure (1)
-plot(theta_2,theta_i)
-grid on;
-title('$\theta_i$ vs $\theta_2$', 'Interpreter','latex')
-xlabel('\theta_2   unit: degree')
-ylabel('\theta_i   unit: degree')
-
-% and so on
-
-% *****************************************************
-
-%% Temporary Section to define things for part 2 to be tested (Added by Ryan)
-r2 = 36/100; % cm  AB
-r3 = 120/100; % variable
-r6 = 60/100;
 
 %% Part 2 - Force and Moment Calculation
 
 
-%%initial parameters:
-rrod = 0.005
+%initial parameters:
+rrod = 0.005;
 
 dtheta2 = 2; % theta2 dot
 ddtheta2 = 0; % theta2 doble-dot - second derivative
@@ -99,24 +51,20 @@ Ms_list = [];
 
 for theta2 = 0:1:360
 
-    % kinematic variables are caculated based on loop eqn
-    r_i = % ENTER YOUR CODE HERE %;
-    dr_i = % ENTER YOUR CODE HERE %;
-    ddr_i = % ENTER YOUR CODE HERE %;
-
-    %Yuming plz double check and fill this section,
     % Note my reference angles in the PDF I posted
     % Also, I changed my math to work with m instead of CM for CI units
     % Define angles and angular derivatives (derivatives done by hand)
-    theta3 = 180 + asind((r2*sind(theta_2) - r8) ./ r3);
+    theta3 = 180 + asind((r2*sind(theta2) - r8) ./ r3);
     theta5 = theta3;
-    theta6 = 180 - asind((r2*sind(theta_2 + theta_5) / r6)) - theta_5;
-    dtheta3 = r2*theta2*cosd(theta2)/(r3*cosd(theta3))
-    dtheta6 = (r5*theta5 + r2*dtheta2*cosd(theta2-theta5))/(r6*cos(theta6+theta5))
-    ddtheta3 = (r2/r3)*(((-sind(theta2)*dtheta2^2 + cosd(theta2)*ddtheta2)*cosd(theta3)+cosd(theta2)*dtheta2*sind(theta3)*dtheta3)/cosd(theta3)^2)
-    dN = (dr5*dtheta5+r5*theta5*ddtheta5)+r2(-sind(theta2-theta1)*(dtheta2-dtheta5)*dtheta2+cosd(theta2-theta5)*ddtheta2)
-    N = r5*theta5 + r5*theta5*ddtheta5 + r2 (-sind(theta2-theta1)*(dtheta2-dtheta5)*dtheta2 + cosd(theta2-theta5)*ddtheta2)
-    ddtheta6 = (cosd(theta6+theta5)*dN + sind(theta6+theta5)*(dtheta6+dtheta5)*N)/r6*cosd(theta6+theta5)^2
+    theta6 = 180 - asind((r2*sind(theta2 + theta5) / r6)) - theta5;
+    r5 = ((-r2 * sind(theta2 + theta6)) / sind(theta5 + theta6));
+    dtheta3 = r2*theta2*cosd(theta2)/(r3*cosd(theta3));
+    dr5 = (r5*dtheta3*sind(theta3+theta6) + r2*dtheta2*sind(theta2+theta6)) / cosd(theta5+theta6);
+    dtheta6 = (r5*theta5 + r2*dtheta2*cosd(theta2-theta5))/(r6*cos(theta6+theta5));
+    ddtheta3 = (r2/r3)*(((-sind(theta2)*dtheta2^2 + cosd(theta2)*ddtheta2)*cosd(theta3)+cosd(theta2)*dtheta2*sind(theta3)*dtheta3)/cosd(theta3)^2);
+    dN = (dr5*dtheta3+r5*theta5*ddtheta3)+r2*(-sind(theta2-theta1)*(dtheta2-dtheta3)*dtheta2+cosd(theta2-theta5)*ddtheta2);
+    N = r5*theta5 + r5*theta5*ddtheta3 + r2*(-sind(theta2-theta1)*(dtheta2-dtheta3)*dtheta2 + cosd(theta2-theta5)*ddtheta2);
+    ddtheta6 = (cosd(theta6+theta5)*dN + sind(theta6+theta5)*(dtheta6+dtheta3)*N)/r6*cosd(theta6+theta5)^2;
   
     % Define Accelerations
     ag2x = -0.18*dtheta2^2*cosd(dtheta2);
@@ -184,70 +132,73 @@ end
 % Might have to transpose the Force vectors for polar plot. Do so if needed
 % Polar plot only works with radians so will have to do it accordingly
 
-figure (1)
+figure;
+tiledlayout(5, 2); 
+
+nexttile;
 plot(theta2_list,M12_list)
 grid on;
 title('M_{12} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('M_{12} (Nm)')
 
-figure (2)
+nexttile;
 plot(theta2_list,F12_list)
 grid on;
 title('F_{12} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('F_{12} (N)')
 
-figure (3)
+nexttile;
 plot(theta2_list,F23_list)
 grid on;
 title('F_{23} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('F_{23} (N)')
 
-figure (4)
+nexttile;
 plot(theta2_list,F34_list)
 grid on;
 title('F_{34} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('F_{34} (N)')
 
-figure (5)
+nexttile;
 plot(theta2_list,F16_list)
 grid on;
 title('F_{16} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('F_{16} (N)')
 
-figure (6)
+nexttile;
 plot(theta2_list,F56_list)
 grid on;
 title('F_{56} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('F_{56} (N)')
 
-figure (7)
+nexttile;
 plot(theta2_list,F14_list)
 grid on;
 title('F_{14} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('F_{14} (N)')
 
-figure (8)
+nexttile;
 plot(theta2_list,F35_list)
 grid on;
 title('F_{35} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('F_{35} (N)')
 
-figure (9)
+nexttile;
 plot(theta2_list,Fs_list)
 grid on;
 title('F_{s} vs \theta2')
 xlabel('\theta_2   (degrees)')
 ylabel('F_{s} (N)')
 
-figure (10)
+nexttile;
 plot(theta2_list,Ms_list)
 grid on;
 title('M_{s} vs \theta2')
