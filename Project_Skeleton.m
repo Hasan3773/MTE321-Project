@@ -55,17 +55,18 @@ for theta2 = 0:1:360
     theta5 = theta3;
     theta6 = 180 - asind((r2*sind(theta2 + theta5) / r6)) - theta5;
     r5 = ((-r2 * sind(theta2 + theta6)) / sind(theta5 + theta6));
-    dtheta3 = r2*theta2*cosd(theta2)/(r3*cosd(theta3));
+    dtheta3 = (r2*dtheta2*cosd(theta2))/(r3*cosd(theta3));
     dr5 = (r5*dtheta3*sind(theta3+theta6) + r2*dtheta2*sind(theta2+theta6)) / cosd(theta5+theta6);
-    dtheta6 = (r5*theta5 + r2*dtheta2*cosd(theta2-theta5))/(r6*cosd(theta6+theta5));
+    dtheta6 = (r5*dtheta3 + r2*dtheta2*cosd(theta2-theta5)) / (r6*cosd(theta6+theta5));
     ddtheta3 = (r2/r3)*(((-sind(theta2)*dtheta2^2 + cosd(theta2)*ddtheta2)*cosd(theta3)+cosd(theta2)*dtheta2*sind(theta3)*dtheta3)/cosd(theta3)^2);
-    dN = (dr5*dtheta3+r5*theta5*ddtheta3)+r2*(-sind(theta2-theta5)*(dtheta2-dtheta3)*dtheta2+cosd(theta2-theta5)*ddtheta2);
-    N = r5*theta5 + r5*theta5*ddtheta3 + r2*(-sind(theta2-theta5)*(dtheta2-dtheta3)*dtheta2 + cosd(theta2-theta5)*ddtheta2);
+
+    dN = (dr5*dtheta3+r5*ddtheta3)+r2*(-sind(theta2-theta5)*(dtheta2-dtheta3)*dtheta2+cosd(theta2-theta5)*ddtheta2);
+    N = r5*dtheta3 + r5*theta5*ddtheta3 + r2*(-sind(theta2-theta5)*(dtheta2-dtheta3)*dtheta2 + cosd(theta2-theta5)*ddtheta2);
     ddtheta6 = (cosd(theta6+theta5)*dN + sind(theta6+theta5)*(dtheta6+dtheta3)*N)/r6*cosd(theta6+theta5)^2;
   
     % Define Accelerations
-    ag2x = -0.18*dtheta2^2*cosd(dtheta2);
-    ag2y = -0.18*dtheta2^2*sind(dtheta2);
+    ag2x = -0.18*dtheta2^2*cosd(theta2);
+    ag2y = -0.18*dtheta2^2*sind(theta2);
     ag3x = -0.36*dtheta2^2*cosd(theta2) - 0.60*(ddtheta3*sind(theta3) + dtheta3^2*cosd(theta3));
     ag3y = -0.36*dtheta2^2*sind(theta2) - 0.60*(ddtheta3*cosd(theta3) - dtheta3^2*sind(theta3));
     ag4 = -0.36*dtheta2^2*cosd(theta2) - 1.2*(ddtheta3*sind(theta3) + dtheta3^2*cosd(theta3));
