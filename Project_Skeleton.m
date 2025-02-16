@@ -45,8 +45,21 @@ F35_list = [];
 Fs_list = [];
 Ms_list = [];
 
+% Initialize lists for plotting
+theta2_list = 0:1:360;
+theta3_list = zeros(size(theta2_list));
+dtheta3_list = zeros(size(theta2_list));
+ddtheta3_list = zeros(size(theta2_list));
+theta6_list = zeros(size(theta2_list));
+dtheta6_list = zeros(size(theta2_list));
+ddtheta5_list = zeros(size(theta2_list));
+r5_list = zeros(size(theta2_list));
+dr5_list = zeros(size(theta2_list));
+r7_list = zeros(size(theta2_list));
+dr7_list = zeros(size(theta2_list));
 
-for theta2 = 0:1:360
+for i = 1:length(theta2_list)
+    theta2 = theta2_list(i);
 
     % Note my reference angles in the PDF I posted
     % Also, I changed my math to work with m instead of CM for CI units
@@ -59,6 +72,8 @@ for theta2 = 0:1:360
     dr5 = (r5*dtheta3*sind(theta3+theta6) + r2*dtheta2*sind(theta2+theta6)) / cosd(theta5+theta6);
     dtheta6 = (r5*dtheta3 + r2*dtheta2*cosd(theta2-theta5)) / (r6*cosd(theta6+theta5));
     ddtheta3 = (r2/r3)*(((-sind(theta2)*dtheta2^2 + cosd(theta2)*ddtheta2)*cosd(theta3)+cosd(theta2)*dtheta2*sind(theta3)*dtheta3)/cosd(theta3)^2);
+    r7 = (r2 * cosd(theta2)) - (r3 * cosd(theta3));
+    dr7 = (r2*dtheta2*cosd(theta2)) / (r3*cosd(theta3));
 
     dN = (dr5*dtheta3+r5*ddtheta3)+r2*(-sind(theta2-theta5)*(dtheta2-dtheta3)*dtheta2+cosd(theta2-theta5)*ddtheta2);
     N = r5*dtheta3 + r5*theta5*ddtheta3 + r2*(-sind(theta2-theta5)*(dtheta2-dtheta3)*dtheta2 + cosd(theta2-theta5)*ddtheta2);
@@ -116,7 +131,7 @@ for theta2 = 0:1:360
 
     % Add values to running list to plot later
     M12_list = [M12_list; M12];
-    theta2_list = [theta2_list; theta2];
+    theta2_list(i) = theta2;
     F12_list = [F12_list; F12];
     F23_list = [F23_list; F23];
     F34_list = [F34_list; F34];
@@ -127,8 +142,41 @@ for theta2 = 0:1:360
     Fs_list = [Fs_list; Fs];
     Ms_list = [Ms_list; Ms];
 
+    % Store values for plotting
+    theta3_list(i) = theta3;
+    dtheta3_list(i) = dtheta3;
+    ddtheta3_list(i) = ddtheta3;
+    theta6_list(i) = theta6;
+    dtheta6_list(i) = dtheta6;
+    ddtheta5_list(i) = ddtheta3;
+    r5_list(i) = r5;
+    dr5_list(i) = dr5;
+    r7_list(i) = r7;
+    dr7_list(i) = dr7;
+
 end
 
+%% Plot Kinematic Variables
+figure;
+tiledlayout(5, 2);
+
+titles = {'\theta_3 (deg)', 'd\theta_3 (deg/s)', 'dd\theta_3 (deg/s^2)', ...
+          '\theta_6 (deg)', 'd\theta_6 (deg/s)', 'dd\theta_5 (deg/s^2)', ...
+          'r_5 (m)', 'dr_5 (m/s)', 'r_7 (m)', 'dr_7 (m/s)'};
+
+variables = {theta3_list, dtheta3_list, ddtheta3_list, theta6_list, dtheta6_list, ...
+             ddtheta5_list, r5_list, dr5_list, r7_list, dr7_list};
+
+for j = 1:length(variables)
+    nexttile;
+    plot(theta2_list, variables{j}, 'LineWidth', 1.5);
+    grid on;
+    title(titles{j}, 'Interpreter', 'tex');
+    xlabel('\theta_2 (degrees)');
+    ylabel(titles{j});
+end
+
+sgtitle('Kinematic Variables vs \theta_2');
 
 % Regular and Polar plots:
 % Might have to transpose the Force vectors for polar plot. Do so if needed
