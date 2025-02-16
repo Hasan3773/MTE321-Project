@@ -3,17 +3,14 @@
 clear; clc; close all;
 
 %%initial parameter: unit: m, degree, rad/sec
-r2 = 36; % cm  o2B
-r3 = 60;
-r6 = 120;
-r8 = 8.4; 
-
-theta1 = 180;
-dtheta2 = 1;
-ddtheta2 = 0; 
-
+r2 = 36/100; % cm  o2B
+r3 = 60/100;
+r6 = 120/100;
+r8 = 8.4/100; 
 
 %% Part 1- Calculations for kinematic variables, caculated based on loop closure eqn
+
+
 
 %% Part 2 - Force and Moment Calculation
 
@@ -21,7 +18,7 @@ ddtheta2 = 0;
 %initial parameters:
 rrod = 0.005;
 
-dtheta2 = 2; % theta2 dot
+dtheta2 = 2 * 180/pi; % theta2 dot
 ddtheta2 = 0; % theta2 doble-dot - second derivative
 
 % Rod masses (calculated by hand)
@@ -60,10 +57,10 @@ for theta2 = 0:1:360
     r5 = ((-r2 * sind(theta2 + theta6)) / sind(theta5 + theta6));
     dtheta3 = r2*theta2*cosd(theta2)/(r3*cosd(theta3));
     dr5 = (r5*dtheta3*sind(theta3+theta6) + r2*dtheta2*sind(theta2+theta6)) / cosd(theta5+theta6);
-    dtheta6 = (r5*theta5 + r2*dtheta2*cosd(theta2-theta5))/(r6*cos(theta6+theta5));
+    dtheta6 = (r5*theta5 + r2*dtheta2*cosd(theta2-theta5))/(r6*cosd(theta6+theta5));
     ddtheta3 = (r2/r3)*(((-sind(theta2)*dtheta2^2 + cosd(theta2)*ddtheta2)*cosd(theta3)+cosd(theta2)*dtheta2*sind(theta3)*dtheta3)/cosd(theta3)^2);
-    dN = (dr5*dtheta3+r5*theta5*ddtheta3)+r2*(-sind(theta2-theta1)*(dtheta2-dtheta3)*dtheta2+cosd(theta2-theta5)*ddtheta2);
-    N = r5*theta5 + r5*theta5*ddtheta3 + r2*(-sind(theta2-theta1)*(dtheta2-dtheta3)*dtheta2 + cosd(theta2-theta5)*ddtheta2);
+    dN = (dr5*dtheta3+r5*theta5*ddtheta3)+r2*(-sind(theta2-theta5)*(dtheta2-dtheta3)*dtheta2+cosd(theta2-theta5)*ddtheta2);
+    N = r5*theta5 + r5*theta5*ddtheta3 + r2*(-sind(theta2-theta5)*(dtheta2-dtheta3)*dtheta2 + cosd(theta2-theta5)*ddtheta2);
     ddtheta6 = (cosd(theta6+theta5)*dN + sind(theta6+theta5)*(dtheta6+dtheta3)*N)/r6*cosd(theta6+theta5)^2;
   
     % Define Accelerations
@@ -101,16 +98,20 @@ for theta2 = 0:1:360
     F35 = x(12);
     M12 = x(13);
 
+    % Shaking force and moment
+    Fs = sqrt(F12x^2 + (F12y + F14)^2);
+    Ms = M12 + (1.2*cosd(theta3) - 0.36*cosd(theta2))*F14;
+
     % Calculate magnitudes
     F12 = sqrt(F12x^2 + F12y^2);
     F23 = sqrt(F23x^2 + F23y^2);
     F34 = sqrt(F34x^2 + F34y^2);
     F16 = sqrt(F16x^2 + F16y^2);
     F56 = sqrt(F56x^2 + F56y^2);
-
-    % Shaking force and moment
-    Fs = sqrt(F12x^2 + (F12y + F14)^2);
-    Ms = M12 + (1.2*cos(theta3) - 0.36*cos(theta2))*F14;
+    F14 = abs(F14);
+    F35 = abs(F35);
+    M12 = abs(M12);
+    Ms = abs(Ms);
 
     % Add values to running list to plot later
     M12_list = [M12_list; M12];
