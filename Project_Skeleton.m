@@ -113,8 +113,10 @@ for theta2 = 0:1:360
     theta6 = 180 - asind((r2*sind(theta_2 + theta_5) / r6)) - theta_5;
     dtheta3 = r2*theta2*cosd(theta2)/(r3*cosd(theta3))
     dtheta6 = (r5*theta5 + r2*dtheta2*cosd(theta2-theta5))/(r6*cos(theta6+theta5))
-    ddtheta3 = 
-    ddtheta6 =
+    ddtheta3 = (r2/r3)*(((-sind(theta2)*dtheta2^2 + cosd(theta2)*ddtheta2)*cosd(theta3)+cosd(theta2)*dtheta2*sind(theta3)*dtheta3)/cosd(theta3)^2)
+    dN = (dr5*dtheta5+r5*theta5*ddtheta5)+r2(-sind(theta2-theta1)*(dtheta2-dtheta5)*dtheta2+cosd(theta2-theta5)*ddtheta2)
+    N = r5*theta5 + r5*theta5*ddtheta5 + r2 (-sind(theta2-theta1)*(dtheta2-dtheta5)*dtheta2 + cosd(theta2-theta5)*ddtheta2)
+    ddtheta6 = (cosd(theta6+theta5)*dN + sind(theta6+theta5)*(dtheta6+dtheta5)*N)/r6*cosd(theta6+theta5)^2
   
     % Define Accelerations
     ag2x = -0.18*dtheta2^2*cosd(dtheta2);
